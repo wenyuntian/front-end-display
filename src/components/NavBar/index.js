@@ -22,7 +22,7 @@ class About extends React.Component {
                 <div className='nav-top'></div>
                 <div className='nav-content'>
                     <div className='nav-logo'>
-                        <span>逆水行舟 | </span>只要还有明天，今天就永远是起跑线
+                        <span>逆水行舟 | </span>学习如逆水行舟，不进则退
                     </div>
                     <ul className='nav-menu'>
                         <li><Link to=''>网站首页</Link></li>

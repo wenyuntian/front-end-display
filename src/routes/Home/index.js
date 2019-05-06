@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Carousel, Row, Col, Tabs, Icon } from 'antd';
 import HotArticle from '../../components/HotArticle'
 import ClickList from '../../components/ClickList'
@@ -20,11 +21,23 @@ class Home extends React.Component {
       motto: ' ',
       email: ' ',
       profession: ' '
-    }
+    },
+    allArticle: [],
+    categoryList: []
   }
   componentDidMount() {
     this.getCarouselList();
     this.getPersonalInformation();
+    this.getAllArticle();
+    this.getCategory();
+  }
+
+  getCategory = () => {
+    fetch('get', '/api/display/categoryList', '', (response) => {
+      this.setState({
+        categoryList: response.data.categoryList
+      })
+    })
   }
 
   getCarouselList = () => {
@@ -42,15 +55,23 @@ class Home extends React.Component {
       })
     })
   }
+
+  getAllArticle = () => {
+    fetch('get', '/api/display/allArticle', '', (response) => {
+      this.setState({
+        allArticle: response.data.articleList
+      })
+    })
+  }
   
     render() {
-      const {carouselList, personal} = this.state;
+      const {carouselList, personal, allArticle, categoryList} = this.state;
       return (
         <div className='home'>
           <Row className='content-left' gutter={24}>
             <Col span={18}>
               <CarouselBox carouselList={carouselList}/>
-              <CategoryTab />
+              <CategoryTab categoryList={categoryList} allArticle={allArticle}/>
               <RecommendArticle />
               <MiddleBackground />
               <LatestArticle title='最新文章' />
@@ -110,64 +131,74 @@ class Home extends React.Component {
 
   class CategoryTab extends React.Component {
     state = {
-      abstractVisibleKey: 1
+      abstractVisibleKey: 0
     }
 
     abstractVisibleChange = (key) => {
-      console.log(key)
       this.setState({
         abstractVisibleKey: key
+      })
+    }
+
+    tabOnChange = () => {
+      this.setState({
+        abstractVisibleKey: 0
       })
     }
   
     render() {
       const {abstractVisibleKey} = this.state;
+      const {categoryList, allArticle} = this.props;
+
       const styles = {
         backgroundColor: '#F7F7F7',
         color: '#1890ff'
       }
       return (
-        <Tabs defaultActiveKey="1" className="category-tab">
-          <TabPane tab="前端开发" key="1">
-            <Row gutter={24}>
-              <Col span={6}>
-                <div className='category-article-image' style={{backgroundImage: `url(${url})`}}>
-                  <div className='background-filter'><h3>测试文章</h3></div>
-                </div>
-                <div className='category-article-image' style={{backgroundImage: `url(${url})`}}>
-                  <div className='background-filter'><h3>测试文章</h3></div>
-                </div>
-              </Col>
-              <Col span={18}>
-                <ul className='category-article-list'>
-                  <li onMouseEnter={this.abstractVisibleChange.bind(this, 1)} style={abstractVisibleKey === 1 ? styles : {}}>
-                    <Icon type='link'></Icon> <span>这是一篇文章</span>
-                    <div className='categoryarticle-abstract' style={{display: `${abstractVisibleKey === 1 ? 'block': 'none'}`}}>这是文章的简介</div>
-                  </li>
-                  <li onMouseEnter={this.abstractVisibleChange.bind(this, 2)} style={abstractVisibleKey === 2 ? styles : {}}>
-                  <Icon type='link'></Icon> <span>这是一篇文章</span>
-                    <div className='categoryarticle-abstract' style={{display: `${abstractVisibleKey === 2 ? 'block': 'none'}`}}>这是文章的简介</div>
-                  </li>
-                  <li>
-                    <Icon type='link'></Icon> <span>这是一篇文章</span>
-                    <div className='categoryarticle-abstract'>这是文章的简介</div>
-                  </li>
-                  <li>
-                    <Icon type='link'></Icon> <span>这是一篇文章</span>
-                    <div className='categoryarticle-abstract'>这是文章的简介</div>
-                  </li>
-                  <li>
-                    <Icon type='link'></Icon> <span>这是一篇文章</span>
-                    <div className='categoryarticle-abstract'>这是文章的简介</div>
-                  </li>
-                </ul>
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane tab="Linux" key="2">Content of Tab Pane 2</TabPane>
-          <TabPane tab="数据库" key="3">Content of Tab Pane 3</TabPane>
-          <TabPane tab="知识总结" key="4">Content of Tab Pane 3</TabPane>
-          <TabPane tab="Java开发" key="5">Content of Tab Pane 3</TabPane>
+        <Tabs onChange={this.tabOnChange} defaultActiveKey="1" className="category-tab">
+          {categoryList.map((category, index) => {
+            const cartegoryArticleList = allArticle.filter((article, index) => {
+              return article.category === category.name;
+            })
+
+            return (
+              <TabPane tab={category.name} key={index}>
+                    <Row gutter={24}>
+                      <Col span={6}>
+                        {cartegoryArticleList[0] ? 
+                          <Link>
+                            <div className='category-article-image' style={{backgroundImage: `url(${url})`}}>
+                              <div className='background-filter'><h3>{cartegoryArticleList[0].title}</h3></div>
+                            </div>
+                          </Link> 
+                          : ''
+                        }
+                        {cartegoryArticleList[1] ? 
+                          <Link>
+                            <div className='category-article-image' style={{backgroundImage: `url(${url})`}}>
+                              <div className='background-filter'><h3>{cartegoryArticleList[1].title}</h3></div>
+                            </div>
+                          </Link> 
+                          : ''
+                        }
+                      </Col>
+                      <Col span={18}>
+                        <ul className='category-article-list'>
+                          {cartegoryArticleList.map((article, index) => {
+                            
+                            return index < 5 ? (
+                              <li onMouseEnter={this.abstractVisibleChange.bind(this, index)} style={abstractVisibleKey === index ? styles : {}}>
+                                <Icon type='link'></Icon> <span>{article.title}</span>
+                                <div className='categoryarticle-abstract' style={{display: `${abstractVisibleKey === index ? 'block': 'none'}`}}>{article.abstract}</div>
+                              </li>
+                            ) 
+                            : ''
+                          })}
+                        </ul>
+                      </Col>
+                    </Row>
+              </TabPane>
+          )})}
         </Tabs>
       )
     }
