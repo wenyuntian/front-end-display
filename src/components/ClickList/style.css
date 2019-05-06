@@ -1,0 +1,47 @@
+.click-article {
+    background-color: #fff;
+    padding: 8px 12px;
+    margin-top: 18px;
+}
+.click-article .article-item {
+    border-bottom: 1px solid #cfd8dc;
+    padding-bottom: 8px;
+    transition: border .2s;
+}
+.click-article .article-item:hover {
+    border-bottom: 1px solid #000;
+}
+.click-article .article-item:hover .article-abstract {
+    color: #000;
+}
+.click-article .article-item h4{
+    height: 32px;
+    line-height: 32px;
+    font-weight: 900;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.click-article-content .article-content {
+    display: flex;
+}
+.article-content .article-image {
+    flex: 3;
+    height: 58px;
+    background-size: cover;
+}
+.article-content .article-abstract {
+    padding: 0 8px;
+    font-size: 14px;
+    height: 58px;
+    transition: color .2s;
+    color: #9e9e9e;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    flex: 5;
+}

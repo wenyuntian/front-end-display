@@ -1,0 +1,48 @@
+.hot-article {
+    padding: 8px 12px;
+    background-color: #fff;
+    height: 309px;
+    margin-top: 18px;
+}
+.common-header {
+    font-size: 18px;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #cfd8dc;
+}
+.common-header span {
+    display: inline-block;
+    height: 100%;
+    border-bottom: 2px solid #1890ff;
+}
+
+
+.hot-article-content li {
+    font-size: 14px;
+    height: 32px;
+    width: 100%;
+    background-color: #F7F7F7;
+    line-height: 32px;
+    padding: 0 12px 0 18px;
+    margin: 8px 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow:ellipsis;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: box-shadow .2s;
+}
+
+.hot-article-content li::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 4px;
+    background: #212121 ;
+    top: 15px;
+    left: 6px;
+    position: absolute;
+}
+.hot-article-content li:hover {
+    box-shadow: 0 0 3px 3px #cfd8dc; 
+}
